@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+A = np.matrix('-2;-2')
+B = np.matrix('1;3')
+C = np.matrix('4;-1')
+def dist(a,b):
+	return np.linalg.norm(b-a,2)
+BA=AB=dist(A,B)
+CB=BC=dist(B,C)
+AC=CA=dist(C,A)
+U=(AC*B+AB*C)/(AB+AC)
+W=(BC*A+AC*B)/(BC+AC)
+V=(BC*A+AB*C)/(BC+AB)
+def normal_vector(a,b):
+	omat = np.matrix('0,1;-1,0')
+	return np.matmul(omat,b-a)
+def line_intersect(a,d,c,f):
+	n1=normal_vector(a,d)
+	n2=normal_vector(c,f)
+	N=np.vstack((n1.T,n2.T))
+	return np.matmul(np.linalg.inv(N),np.vstack((np.matmul(n1.T,a),np.matmul(n2.T,c))))
+I=line_intersect(A,U,B,V)
+plt.plot( [A[0,0],U[0,0]] , [A[1,0],U[1,0]] ,label='AU')
+plt.plot( [B[0,0],V[0,0]] , [B[1,0],V[1,0]] ,label='BV')
+plt.plot( [C[0,0],W[0,0]] , [C[1,0],W[1,0]] ,label='CW')
+plt.plot( I[0,0]  , I[1,0]  , color='blue', marker='o' )
+plt.text( I[0,0] + 0.1, I[1,0] + 0.15, 'I' , fontsize=16)
+plt.grid()
+plt.legend(loc='best')
+plt.show()
